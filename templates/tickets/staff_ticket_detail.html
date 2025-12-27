@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Ticket {{ ticket.ticket_id }}{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">Ticket {{ ticket.ticket_id }}</h1>
+
+<div class="mb-3">
+  <a href="{% url 'staff_ticket_list' %}" class="btn btn-secondary btn-sm">&larr; Back to My Tickets</a>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card mb-3">
+      <div class="card-header">Details</div>
+      <div class="card-body">
+        <p><strong>Customer:</strong> {{ ticket.customer.name }} ({{ ticket.customer.email }}, {{ ticket.customer.phone }})</p>
+        <p><strong>Category:</strong> {{ ticket.category.name }}</p>
+        <p><strong>Status:</strong> {{ ticket.get_status_display }}</p>
+        <p><strong>Assigned To:</strong> {{ ticket.current_assigned_to }}</p>
+        <p><strong>Created At:</strong> {{ ticket.created_at|date:"Y-m-d H:i" }}</p>
+        <p><strong>Description:</strong><br>{{ ticket.description }}</p>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-header">Update Status</div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          {{ status_form.as_p }}
+          <button type="submit" name="update_status" class="btn btn-success">Update Status</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-header">Escalate Ticket</div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          {{ escalation_form.as_p }}
+          <button type="submit" name="escalate" class="btn btn-warning">Escalate Ticket</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">History</div>
+      <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+        {% if history %}
+          <ul class="list-group list-group-flush">
+          {% for h in history %}
+            <li class="list-group-item">
+              <strong>{{ h.created_at|date:"Y-m-d H:i" }}</strong><br>
+              {{ h.action_type }} –
+              From: {{ h.from_staff|default:"System" }} |
+              To: {{ h.to_staff|default:"-" }}<br>
+              <em>{{ h.comment }}</em>
+            </li>
+          {% endfor %}
+          </ul>
+        {% else %}
+          <p>No history yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

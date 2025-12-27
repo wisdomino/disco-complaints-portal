@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Complaints Dashboard{% endblock %}
+
+{% block content %}
+
+
+<h1 class="mb-4">Complaints Dashboard</h1>
+
+<form method="get" class="row g-3 mb-4">
+  <div class="col-md-3">
+    <label class="form-label">Status</label>
+    <select name="status" class="form-select">
+      <option value="">All</option>
+      <option value="NEW" {% if status_filter == "NEW" %}selected{% endif %}>New</option>
+      <option value="IN_PROGRESS" {% if status_filter == "IN_PROGRESS" %}selected{% endif %}>In Progress</option>
+      <option value="ESCALATED" {% if status_filter == "ESCALATED" %}selected{% endif %}>Escalated</option>
+      <option value="RESOLVED" {% if status_filter == "RESOLVED" %}selected{% endif %}>Resolved</option>
+      <option value="CLOSED" {% if status_filter == "CLOSED" %}selected{% endif %}>Closed</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Start Date</label>
+    <input type="date" name="start_date" class="form-control" value="{{ start_date }}">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">End Date</label>
+    <input type="date" name="end_date" class="form-control" value="{{ end_date }}">
+  </div>
+  <div class="col-md-3 d-flex align-items-end">
+    <button type="submit" class="btn btn-primary me-2">Apply</button>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Reset</a>
+  </div>
+</form>
+
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card text-bg-primary mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Total Tickets</h5>
+        <p class="card-text fs-3">{{ total_tickets }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-bg-success mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Average Resolution Time</h5>
+        <p class="card-text">
+          {% if avg_resolution %}
+            {{ avg_resolution }}
+          {% else %}
+            Not enough data
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>Tickets by Status</h2>
+{% if status_counts %}
+<table class="table table-striped table-bordered mb-4">
+  <thead class="table-light">
+    <tr>
+      <th>Status</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in status_counts %}
+    <tr>
+      <td>{{ row.status }}</td>
+      <td>{{ row.count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No tickets yet.</p>
+{% endif %}
+
+<h2>Tickets by Category</h2>
+{% if category_counts %}
+<table class="table table-striped table-bordered mb-4">
+  <thead class="table-light">
+    <tr>
+      <th>Category</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in category_counts %}
+    <tr>
+      <td>{{ row.category__name|default:"(No Category)" }}</td>
+      <td>{{ row.count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No tickets yet.</p>
+{% endif %}
+
+<h2>Oldest Open Tickets</h2>
+{% if open_tickets %}
+<table class="table table-striped table-bordered">
+  <thead class="table-light">
+    <tr>
+      <th>Ticket ID</th>
+      <th>Customer</th>
+      <th>Status</th>
+      <th>Created At</th>
+      <th>Age</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in open_tickets %}
+    <tr>
+      <td>{{ t.ticket_id }}</td>
+      <td>{{ t.customer.name }}</td>
+      <td>{{ t.get_status_display }}</td>
+      <td>{{ t.created_at|date:"Y-m-d H:i" }}</td>
+      <td>{{ t.age }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No open tickets.</p>
+{% endif %}
+
+{% endblock %}

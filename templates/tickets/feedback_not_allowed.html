@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback Not Available</title>
+</head>
+<body>
+    <h1>Feedback Not Available</h1>
+    <p>
+        Feedback for Ticket <strong>{{ ticket.ticket_id }}</strong> is not currently available
+        because the ticket is in status <strong>{{ ticket.get_status_display }}</strong>.
+    </p>
+</body>
+</html>

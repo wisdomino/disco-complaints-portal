@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Complaint Submitted{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="alert alert-success">
+      <h4 class="alert-heading">Thank you!</h4>
+      <p>Your complaint has been received.</p>
+      <hr>
+      <p>Your Ticket ID is: <strong>{{ ticket.ticket_id }}</strong></p>
+      <p>Please keep this ID for future reference.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
