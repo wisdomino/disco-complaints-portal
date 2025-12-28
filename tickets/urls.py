@@ -2,7 +2,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+
+    path('', views.home_view, name='home'),
     path('new/', views.create_complaint_view, name='create_complaint'),
+    path('post-login/', views.post_login_redirect_view, name='post_login_redirect'),
+
 
     # staff URLs
     path('staff/tickets/', views.staff_ticket_list_view, name='staff_ticket_list'),
@@ -13,4 +17,5 @@ urlpatterns = [
 
     # customer feedback
     path('feedback/<str:ticket_id>/', views.feedback_view, name='ticket_feedback'),
+
 ]

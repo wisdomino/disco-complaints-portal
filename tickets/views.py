@@ -48,6 +48,8 @@ def feedback_view(request, ticket_id):
         "form": form,
     })
 
+def home_view(request):
+    return render(request, "tickets/home.html")
 
 
 def create_complaint_view(request):
@@ -264,3 +266,10 @@ def dashboard_view(request):
         "end_date": end_date or "",
     }
     return render(request, "tickets/dashboard.html", context)
+
+@login_required
+def post_login_redirect_view(request):
+    if request.user.is_staff or request.user.is_superuser:
+        return redirect('dashboard')
+    return redirect('staff_ticket_list')
+
