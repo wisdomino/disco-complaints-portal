@@ -139,3 +139,11 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 SITE_BASE_URL = "http://127.0.0.1:8000"  # change this to real domain in production
 
 LOGIN_REDIRECT_URL = "/post-login/"
+
+STATIC_URL = '/static/'
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
